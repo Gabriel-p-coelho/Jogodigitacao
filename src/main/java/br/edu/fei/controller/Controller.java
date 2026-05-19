@@ -5,11 +5,13 @@
 package br.edu.fei.controller;
 
 import br.edu.fei.model.Frase;
+import br.edu.fei.view.TelaDigitacao;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -17,17 +19,20 @@ import java.util.ArrayList;
  */
 public class Controller {
 
+    private TelaDigitacao tela;
     private ArrayList<Frase> frases;
     private int indiceAtual;
     private int score;
     private int scoreMaximo;
 
-    public Controller() {
-        frases = new ArrayList<>();
+    public Controller(TelaDigitacao tela) {
+        this.tela = tela;
+        this.frases = new ArrayList<>();
         indiceAtual = 0;
         score = 0;
         carregarFrases();
         scoreMaximo = lerScoreMaximo();
+        tela.getFraseLabel().setText(getFraseAtual());
     }
 
     public int getScore() {
@@ -42,8 +47,38 @@ public class Controller {
         return frases.size();
     }
 
+    public String getFraseAtual() {
+        return frases.get(indiceAtual).getFrase();
+    }
+
+    public void confirmar() {
+        String digitado = tela.getTextoDigitadoArea().getText();
+        boolean correto = frases.get(indiceAtual).comparar(digitado.trim());
+        if (correto) {
+            score++;
+        }
+        indiceAtual++;
+
+        if (correto) {
+            JOptionPane.showMessageDialog(tela, "Correto!");
+        } else {
+            JOptionPane.showMessageDialog(tela, "Errado!");
+        }
+        tela.getTextoDigitadoArea().setText("");
+
+        if (indiceAtual < frases.size()) {
+            tela.getFraseLabel().setText(getFraseAtual());
+        } else {
+            salvarScore();
+            JOptionPane.showMessageDialog(tela,
+                    "Fim de jogo!\nSeu score: " + score + "/" + frases.size()
+                    + "\nScore máximo: " + scoreMaximo);
+            tela.dispose();
+        }
+    }
+
     private void carregarFrases() {
-        try{
+        try {
             FileReader arquivo = new FileReader("frases.txt");
             BufferedReader br = new BufferedReader(arquivo);
             String linha;
@@ -56,8 +91,8 @@ public class Controller {
     }
 
     private int lerScoreMaximo() {
-        try{
-            FileReader arquivo = new FileReader("frases.txt");
+        try {
+            FileReader arquivo = new FileReader("score.txt");
             BufferedReader br = new BufferedReader(arquivo);
             String linha = br.readLine();
             if (linha != null) {
@@ -73,15 +108,11 @@ public class Controller {
         if (score > scoreMaximo) {
             scoreMaximo = score;
         }
-        try (FileWriter fw = new FileWriter("score.txt")) {
-            fw.write(String.valueOf(scoreMaximo));
+        try (FileWriter arquivo = new FileWriter("score.txt")) {
+            arquivo.write(String.valueOf(scoreMaximo));
         } catch (IOException e) {
             System.out.println("Erro ao salvar score.");
         }
-    }
-
-    public String getFraseAtual() {
-        return frases.get(indiceAtual).getFrase();
     }
 
     public boolean verificar(String digitado) {
@@ -91,10 +122,6 @@ public class Controller {
         }
         indiceAtual++;
         return correto;
-    }
-
-    public boolean temProxima() {
-        return indiceAtual < frases.size();
     }
 
 }

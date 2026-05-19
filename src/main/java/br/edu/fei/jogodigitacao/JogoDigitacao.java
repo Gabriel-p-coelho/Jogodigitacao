@@ -6,6 +6,7 @@
 
 package br.edu.fei.jogodigitacao;
 
+import br.edu.fei.controller.Controller;
 import br.edu.fei.view.TelaDigitacao;
 
 /**
@@ -16,6 +17,8 @@ public class JogoDigitacao {
 
     public static void main(String[] args) {
         TelaDigitacao tela = new TelaDigitacao();
+        Controller controller = new Controller(tela);
+        tela.setController(controller);
         tela.setVisible(true);
     }
 }

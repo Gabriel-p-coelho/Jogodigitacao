@@ -5,7 +5,9 @@
 package br.edu.fei.view;
 
 import br.edu.fei.controller.Controller;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 
 /**
  *
@@ -20,14 +22,9 @@ public class TelaDigitacao extends javax.swing.JFrame {
      */
     public TelaDigitacao() {
         initComponents();
-        inicializar();
 
     }
 
-    private void inicializar() {
-        controller = new Controller();
-        fraseLabel.setText(controller.getFraseAtual());
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -112,18 +109,7 @@ public class TelaDigitacao extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void confirmaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmaBtnActionPerformed
-        JOptionPane.showMessageDialog(this, controller.verificar(textoDigitadoArea.getText()) ? "Correto!" : "Errado!");
-        textoDigitadoArea.setText("");
-
-        if (controller.temProxima()) {
-            fraseLabel.setText(controller.getFraseAtual());
-        } else {
-            controller.salvarScore();
-            JOptionPane.showMessageDialog(this,
-                    "Fim de jogo!\nSeu score: " + controller.getScore() + "/" + controller.getTotalFrases()
-                    + "\nScore máximo: " + controller.getScoreMaximo());
-            System.exit(0);
-        }
+        controller.confirmar();
     }//GEN-LAST:event_confirmaBtnActionPerformed
 
     private void textoDigitadoAreaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_textoDigitadoAreaKeyPressed
@@ -168,5 +154,18 @@ public class TelaDigitacao extends javax.swing.JFrame {
     private javax.swing.JTextArea textoDigitadoArea;
     // End of variables declaration//GEN-END:variables
     private Controller controller;
+
+    public JLabel getFraseLabel() {
+        return fraseLabel;
+    }
+
+    public JTextArea getTextoDigitadoArea() {
+        return textoDigitadoArea;
+    }
+
+    public void setController(Controller controller) {
+        this.controller = controller;
+    }
+
 
 }
