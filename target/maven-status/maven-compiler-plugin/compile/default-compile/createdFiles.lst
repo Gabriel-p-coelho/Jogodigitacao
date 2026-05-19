@@ -1,0 +1,4 @@
+br\edu\fei\model\Frase.class
+br\edu\fei\jogodigitacao\JogoDigitacao.class
+br\edu\fei\view\TelaDigitacao$1.class
+br\edu\fei\controller\Controller.class
